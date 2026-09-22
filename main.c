@@ -1,4 +1,3 @@
-//#define WIN32_LEAN_AND_MEAN
 #define BLOCKSIZE 34
 #define WIDTH 10
 #define HEIGHT 20
@@ -12,7 +11,6 @@
 #define LR_PREDELAY 210
 #define BLINK_DELAY 90
 #define BLINK_PRIORITY 0.4
-//#include <windows.h>
 #include <stdio.h>
 #include <string.h>
 #include <SFML/Graphics.h>
@@ -54,25 +52,24 @@ int main()
 
 	tetris = tetris_init(WIDTH, HEIGHT, initial_level, highscore); // ALLOC 1
 	if (!tetris) {
-		//MessageBoxA(NULL, "Memory allocation failed", "Error", MB_OK | MB_ICONERROR);
+		fputs("Error: Memory allocation failed\n", stderr);
 		return 1;
 	}
 
 	window = sfRenderWindow_create(mode, "Tetris", sfClose, NULL); // ALLOC 2
 	if (!window) {
 		tetris_free(tetris); // FREE 1
-		//MessageBoxA(NULL, "Memory allocation failed", "Error", MB_OK | MB_ICONERROR);
+		fputs("Error: Memory allocation failed\n", stderr);
 		return 1;
 	}
 	sfRenderWindow_setFramerateLimit(window, 120);
 	sfRenderWindow_setKeyRepeatEnabled(window, sfFalse);
-	//sfRenderWindow_setVerticalSyncEnabled(window, sfTrue);
 
 	rect = sfRectangleShape_create(); // ALLOC 3
 	if (!rect) {
 		sfRenderWindow_destroy(window); // FREE 2
 		tetris_free(tetris); // FREE 1
-		//MessageBoxA(NULL, "Memory allocation failed", "Error", MB_OK | MB_ICONERROR);
+		fputs("Error: Memory allocation failed\n", stderr);
 		return 1;
 	}
 
@@ -81,7 +78,7 @@ int main()
 		sfRectangleShape_destroy(rect); // FREE 3
 		sfRenderWindow_destroy(window); // FREE 2
 		tetris_free(tetris); // FREE 1
-		//MessageBoxA(NULL, "Unable to load texture", "Error", MB_OK | MB_ICONERROR);
+		fputs("Error: Unable to load texture\n", stderr);
 		return 1;
 	}
 
@@ -100,7 +97,7 @@ int main()
 		sfRectangleShape_destroy(rect); // FREE 3
 		sfRenderWindow_destroy(window); // FREE 2
 		tetris_free(tetris); // FREE 1
-		//MessageBoxA(NULL, "Memory allocation failed", "Error", MB_OK | MB_ICONERROR);
+		fputs("Error: Memory allocation failed\n", stderr);
 		return 1;
 	}
 
@@ -156,7 +153,7 @@ int main()
 						is_keydown = 0;
 						save_highscore(tetris);
 						tetris_restart(tetris, initial_level);
-						//NO BREAK HERE!
+						//fallthrough
 					case sfKeyEscape:
 						is_menu = 0;
 						sfClock_restart(timer);
@@ -341,8 +338,8 @@ void save_highscore(const tetris_t *tetris)
 	if (highscore_file) {
 		fprintf(highscore_file, "%u", tetris->highscore);
 		fclose(highscore_file);
-	}
-	//else MessageBoxA(NULL, "Unable to open file\nHighscore is not saved!", "Warning", MB_OK | MB_ICONWARNING);
+	} else
+		fputs("Warning: Unable to open file. Highscore is not saved!\n", stderr);
 }
 
 void display_tetris(sfRenderWindow *window, const tetris_t *tetris, sfRectangleShape *rect, const sfTexture *texture)
