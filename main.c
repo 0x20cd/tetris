@@ -76,7 +76,7 @@ int main()
 		return 1;
 	}
 
-	texture = sfTexture_createFromMemory(texturedata, texturesize, NULL); // ALLOC 4
+	texture = sfTexture_createFromMemory(texture_png, texture_png_len, NULL); // ALLOC 4
 	if (!texture) {
 		sfRectangleShape_destroy(rect); // FREE 3
 		sfRenderWindow_destroy(window); // FREE 2
