@@ -328,11 +328,11 @@ int main()
 
 void load_highscore(unsigned *highscore) {
 	FILE *highscore_file = fopen("highscore", "r");
-	if (highscore_file)
+	if (highscore_file) {
 		fscanf(highscore_file, "%u", highscore);
-	else
+		fclose(highscore_file);
+	} else
 		*highscore = 0;
-	fclose(highscore_file);
 }
 
 void save_highscore(const tetris_t *tetris)
